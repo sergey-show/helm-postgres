@@ -1,0 +1,30 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ .Values.Labels.Name }}
+  namespace: {{ .Values.Namespace | default "default" }}
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.Labels.Name }}
+    spec:
+      containers:
+        - name: {{ .Values.Labels.Name }}
+          image: {{ .Values.image.Name }}
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: {{ .Values.Port.Container }}
+          envFrom:
+            - configMapRef:
+                name: {{ .Values.Labels.Name }}-config
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgredb
+          resources:
+            {{ toYaml .Values.resources | indent 12 | trim }}
+      volumes:
+        - name: postgredb
+          persistentVolumeClaim:
+            claimName: {{ .Values.Labels.Name }}-pv-claim

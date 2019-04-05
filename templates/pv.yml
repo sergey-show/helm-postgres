@@ -1,0 +1,16 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: {{ .Values.Labels.Name }}-pv-volume
+  namespace: {{ .Values.Namespace | default "default" }}
+  labels:
+    type: local
+    app: {{ .Values.Labels.Name }}
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: "/mnt/data"

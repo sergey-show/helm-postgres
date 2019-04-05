@@ -1,0 +1,14 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ .Values.Labels.Name }}-pv-claim
+  namespace: {{ .Values.Namespace | default "default" }}
+  labels:
+    app: {{ .Values.Labels.Name }}
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi
